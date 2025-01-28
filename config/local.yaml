@@ -14,7 +14,7 @@ db:
   ssl_mode: "disable"
 logger:
   level: "info"
-  envirment: "dev"
+  envirment: "local"
   file_path: "logs/app.log"
   max_size: 10
   max_backups: 3

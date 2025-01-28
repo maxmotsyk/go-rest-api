@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"restApi/internal/config"
 	"restApi/internal/logger"
 )
