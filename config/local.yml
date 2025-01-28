@@ -12,3 +12,10 @@ db:
   user: "root"
   password: "root_password"
   ssl_mode: "disable"
+logger:
+  level: "info"
+  file_path: "logs/app.log"
+  max_size: 10
+  max_backups: 3
+  max_age: 30
+  
