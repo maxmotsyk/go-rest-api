@@ -1,0 +1,7 @@
+CREATE TABLE links (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    alias TEXT UNIQUE NOT NULL,
+    url TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_alias ON links(alias);

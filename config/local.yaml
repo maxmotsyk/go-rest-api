@@ -12,6 +12,7 @@ db:
   user: "root"
   password: "root_password"
   ssl_mode: "disable"
+  storage_path: "../your_database.db"
 logger:
   level: "info"
   envirment: "local"

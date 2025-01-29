@@ -25,12 +25,13 @@ type HTTPServer struct {
 }
 
 type DataBase struct {
-	Host     string `yaml:"host" env-default:"localhost"`
-	Port     int    `yaml:"port" env-default:"5432"`
-	Name     string `yaml:"name" env-default:"database_orders"`
-	User     string `yaml:"user" env-default:"postgres"`
-	Password string `yaml:"password" env-default:"password"`
-	SSLMode  string `yaml:"ssl_mode" env-default:"disable"`
+	Host        string `yaml:"host" env-default:"localhost"`
+	Port        int    `yaml:"port" env-default:"5432"`
+	Name        string `yaml:"name" env-default:"database_orders"`
+	User        string `yaml:"user" env-default:"postgres"`
+	Password    string `yaml:"password" env-default:"password"`
+	StoragePath string `yaml:"storage_path"`
+	SSLMode     string `yaml:"ssl_mode" env-default:"disable"`
 }
 
 type Logger struct {
