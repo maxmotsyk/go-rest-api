@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"restApi/internal/config"
 	"restApi/internal/logger"
 	"restApi/internal/storage/sqlite"
@@ -18,6 +19,7 @@ func main() {
 	storage, err := sqlite.NewStorage(cfg.DataBase.StoragePath)
 	if err != nil {
 		log.Error(fmt.Sprintf("Error initializing storage: %v", err))
+		os.Exit(1)
 		return
 	}
 	log.Info("Storage initialized")
