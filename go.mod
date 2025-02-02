@@ -1,11 +1,14 @@
 module restApi
 
-go 1.21.0
+go 1.22.0
+
+toolchain go1.23.5
 
 require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.24
+	golang.org/x/exp v0.0.0-20250128182459-e0ece0dbea4c
 )
 
 require (

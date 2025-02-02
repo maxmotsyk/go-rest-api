@@ -2,8 +2,11 @@ package sqlite
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
+	"restApi/internal/storage"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/mattn/go-sqlite3"
 )
 
 type Storage struct {
@@ -11,6 +14,11 @@ type Storage struct {
 }
 
 func NewStorage(storagePath string) (*Storage, error) {
+
+	if storagePath == "" {
+		return nil, errors.New("storage path is empty")
+	}
+
 	db, err := sql.Open("sqlite3", storagePath)
 	if err != nil {
 		return nil, err
@@ -25,4 +33,27 @@ func NewStorage(storagePath string) (*Storage, error) {
 
 func (s *Storage) Close() error {
 	return s.db.Close()
+}
+
+func (s *Storage) SaveURL(urlToSave string, alias string) error {
+
+	statement, err := s.db.Prepare("INSERT INTO urls(url, alias) VALUES(?, ?)")
+
+	defer statement.Close()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = statement.Exec(urlToSave, alias)
+
+	if err != nil {
+		if sqliteError, ok := err.(sqlite3.Error); ok && sqliteError.Code == sqlite3.ErrConstraint {
+			return fmt.Errorf("%w", storage.ErrorURLExists)
+		}
+		return err
+	}
+
+	return nil
+
 }
