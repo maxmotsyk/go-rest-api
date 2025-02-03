@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"restApi/internal/config"
 	"restApi/internal/lib/logger/sl"
@@ -17,7 +16,7 @@ func main() {
 	log := logger.SetupLogger(&cfg.Logger)
 	log.Info("Starting server")
 	// TODO - init storage (postgres, redis);
-	storage, err := sqlite.NewStorage("")
+	storage, err := sqlite.NewStorage(cfg.DataBase.StoragePath)
 
 	defer storage.Close()
 
@@ -27,7 +26,7 @@ func main() {
 	}
 	log.Info("Storage initialized")
 
-	fmt.Println(storage)
 	// TODO - init router
+
 	// TODO - init server
 }

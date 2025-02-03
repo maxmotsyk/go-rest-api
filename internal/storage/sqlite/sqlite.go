@@ -37,7 +37,7 @@ func (s *Storage) Close() error {
 
 func (s *Storage) SaveURL(urlToSave string, alias string) error {
 
-	statement, err := s.db.Prepare("INSERT INTO urls(url, alias) VALUES(?, ?)")
+	statement, err := s.db.Prepare("INSERT INTO links(url, alias) VALUES(?, ?)")
 
 	defer statement.Close()
 
@@ -56,4 +56,46 @@ func (s *Storage) SaveURL(urlToSave string, alias string) error {
 
 	return nil
 
+}
+
+func (s *Storage) GetURL(alias string) (string, error) {
+
+	urlResult := ""
+
+	row, err := s.db.Query("SELECT url FROM links WHERE alias = ?", alias)
+
+	defer row.Close()
+
+	if err != nil {
+		return urlResult, fmt.Errorf("%w", storage.ErrorUrlsNotFound)
+	}
+
+	for row.Next() {
+		err = row.Scan(&urlResult)
+		if err != nil {
+			return urlResult, err
+		}
+	}
+
+	return urlResult, nil
+
+}
+
+func (s *Storage) DeleteByAlias(alias string) error {
+
+	statement, err := s.db.Prepare("DELETE FROM links WHERE alias = ?")
+
+	defer statement.Close()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = statement.Exec(alias)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
