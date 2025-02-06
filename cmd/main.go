@@ -6,6 +6,9 @@ import (
 	"restApi/internal/lib/logger/sl"
 	"restApi/internal/logger"
 	"restApi/internal/storage/sqlite"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
@@ -26,7 +29,12 @@ func main() {
 	}
 	log.Info("Storage initialized")
 
-	// TODO - init router
+	// TODO - init router (chi)
+	router := chi.NewRouter()
+
+	// TODO - init middlewares
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
 
 	// TODO - init server
 }
