@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"restApi/internal/config"
+	mwLogger "restApi/internal/http-server/middleware/logger"
 	"restApi/internal/lib/logger/sl"
 	"restApi/internal/logger"
 	"restApi/internal/storage/sqlite"
@@ -31,10 +32,12 @@ func main() {
 
 	// TODO - init router (chi)
 	router := chi.NewRouter()
+	log.Info("Router initialized")
 
 	// TODO - init middlewares
 	router.Use(middleware.RequestID)
-	router.Use(middleware.Logger)
-
+	router.Use(mwLogger.New(log))
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.URLFormat)
 	// TODO - init server
 }
