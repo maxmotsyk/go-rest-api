@@ -10,10 +10,12 @@ const (
 	StatusError = "error"
 )
 
+// OK returns response with status OK
 func OK() *Response {
 	return &Response{Status: StatusOK}
 }
 
-func Error(err error) *Response {
-	return &Response{Status: StatusError, Error: err.Error()}
+// Error returns response with error message
+func Error(msg string) *Response {
+	return &Response{Status: StatusError, Error: msg}
 }
