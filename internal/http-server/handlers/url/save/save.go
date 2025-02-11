@@ -1,9 +1,12 @@
 package save
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 	resp "restApi/internal/api/response"
+	"restApi/internal/lib/random"
+	"restApi/internal/storage"
 
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
@@ -11,8 +14,8 @@ import (
 
 // Struct for request
 type Request struct {
-	URL   string `json:"url"`
-	Alias string `json:"alias"`
+	URL   string `json:"url" validate:"required,url"`
+	Alias string `json:"alias,omitempty"`
 }
 
 // Struct for response
@@ -23,7 +26,7 @@ type Response struct {
 
 // Interface for URLSaver
 type URLSaver interface {
-	Save(urlToSave string, alias string) error
+	SaveURL(urlToSave string, alias string) error
 }
 
 // New function for save handler
@@ -40,7 +43,7 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 			return
 		}
 
-		log.Info("saving url", slog.String("url", req.URL), slog.String("alias", req.Alias))
+		log.Info("reqest body deccode", slog.Any("reqest", req))
 
 		// Validate request
 		if err := validator.New().Struct(req); err != nil {
@@ -48,5 +51,31 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 			render.JSON(w, r, resp.Error("error validating request"))
 			return
 		}
+
+		// Save URL
+		alias := req.Alias
+		if alias == "" {
+			alias = random.NewRandomString(6)
+		}
+
+		err = urlSaver.SaveURL(req.URL, alias)
+
+		if errors.Is(err, storage.ErrorURLExists) {
+			log.Error("error saving url", err.Error())
+			render.JSON(w, r, resp.Error("alias already exists"))
+			return
+		} else if err != nil {
+			log.Error("error saving url", err.Error())
+			render.JSON(w, r, resp.Error("error saving url"))
+			return
+		}
+
+		// Return response
+
+		render.JSON(w, r, &Response{
+			Response: *resp.OK(),
+			Alias:    req.Alias,
+		})
 	}
+
 }

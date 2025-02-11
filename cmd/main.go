@@ -1,8 +1,10 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"restApi/internal/config"
+	"restApi/internal/http-server/handlers/url/save"
 	mwLogger "restApi/internal/http-server/middleware/logger"
 	"restApi/internal/lib/logger/sl"
 	"restApi/internal/logger"
@@ -39,5 +41,20 @@ func main() {
 	router.Use(mwLogger.New(log))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
+
+	router.Post("/url/save", save.New(log, storage))
+
 	// TODO - init server
+	serv := &http.Server{
+		Addr:    cfg.HTTPServer.Address,
+		Handler: router,
+	}
+
+	// TODO - start server
+
+	if err := serv.ListenAndServe(); err != nil {
+		log.Error("Error starting server:", sl.Err(err))
+		os.Exit(1)
+	}
+
 }
