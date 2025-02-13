@@ -74,7 +74,7 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 
 		render.JSON(w, r, &Response{
 			Response: *resp.OK(),
-			Alias:    req.Alias,
+			Alias:    alias,
 		})
 	}
 
