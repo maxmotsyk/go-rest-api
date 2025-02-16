@@ -57,7 +57,7 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 		if alias == "" {
 			alias = random.NewRandomString(6)
 		}
-
+		// fix bag with repit alias
 		err = urlSaver.SaveURL(req.URL, alias)
 
 		if errors.Is(err, storage.ErrorURLExists) {

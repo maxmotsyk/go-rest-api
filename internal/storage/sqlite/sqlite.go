@@ -36,17 +36,19 @@ func (s *Storage) Close() error {
 }
 
 func (s *Storage) SaveURL(urlToSave string, alias string) error {
-
+	// prepare statement
 	statement, err := s.db.Prepare("INSERT INTO links(url, alias) VALUES(?, ?)")
 
+	// close statement
 	defer statement.Close()
 
 	if err != nil {
 		return err
 	}
-
+	// execute statement
 	_, err = statement.Exec(urlToSave, alias)
 
+	// check error
 	if err != nil {
 		if sqliteError, ok := err.(sqlite3.Error); ok && sqliteError.Code == sqlite3.ErrConstraint {
 			return fmt.Errorf("%w", storage.ErrorURLExists)
@@ -70,6 +72,7 @@ func (s *Storage) GetURL(alias string) (string, error) {
 		return urlResult, fmt.Errorf("%w", storage.ErrorUrlsNotFound)
 	}
 
+	// check if row is empty
 	for row.Next() {
 		err = row.Scan(&urlResult)
 		if err != nil {
