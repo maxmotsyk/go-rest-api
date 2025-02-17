@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"restApi/internal/config"
+	"restApi/internal/http-server/handlers/redirect"
 	"restApi/internal/http-server/handlers/url/save"
 	mwLogger "restApi/internal/http-server/middleware/logger"
 	"restApi/internal/lib/logger/sl"
@@ -43,6 +44,7 @@ func main() {
 	router.Use(middleware.URLFormat)
 
 	router.Post("/url/save", save.New(log, storage))
+	router.Get("/url/{alias}", redirect.New(log, storage))
 
 	// TODO - init server
 	serv := &http.Server{
